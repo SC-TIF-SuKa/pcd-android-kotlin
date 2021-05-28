@@ -1,8 +1,10 @@
 package com.example.pengolahancitra
 
 import android.graphics.Bitmap
-import android.graphics.Color
 
+/**
+ * Created by Fakhry on 28/05/2021.
+ */
 object ImageRotating {
 
     /**
@@ -12,11 +14,14 @@ object ImageRotating {
      * @return newBitmap new image after filter
      */
     fun rotateLeft90(oldBitmap: Bitmap): Bitmap {
-        val newBitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        val resizedOldBitmap = Bitmap.createScaledBitmap(oldBitmap, oldBitmap.height, oldBitmap.width, false)
+        val newBitmap = resizedOldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
         // height and width of Image
-        val h = newBitmap.height
-        val w = newBitmap.width
+        val h = oldBitmap.height
+        val w = oldBitmap.width
+
         for (x in 0 until w) {
             for (y in 0 until h) {
                 //get the old pixel
@@ -36,18 +41,20 @@ object ImageRotating {
      * @return newBitmap new image after filter
      */
     fun rotateRight90(oldBitmap: Bitmap): Bitmap {
-        val newBitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val resizedOldBitmap = Bitmap.createScaledBitmap(oldBitmap, oldBitmap.height, oldBitmap.width, false)
+        val newBitmap = resizedOldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
         // height and width of Image
-        val h = newBitmap.height
-        val w = newBitmap.width
+        val h = oldBitmap.height
+        val w = oldBitmap.width
+
         for (x in 0 until w) {
             for (y in 0 until h) {
                 //get the old pixel
                 val oldPixel = oldBitmap.getPixel(x, y)
 
                 //set the old pixel to the new pixel
-                newBitmap.setPixel(((w - 1) - y), x, oldPixel)
+                newBitmap.setPixel(((h - 1) - y), x, oldPixel)
             }
         }
         return newBitmap
