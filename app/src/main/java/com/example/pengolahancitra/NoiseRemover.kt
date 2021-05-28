@@ -2,7 +2,6 @@ package com.example.pengolahancitra
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 
 /**
  * Created by Fakhry on 28/05/2021.
@@ -34,20 +33,21 @@ object NoiseRemover {
                 var totalBlue = 0
 
                 //ALGORITHM USING 3X3
-                if ((i > 0 && j > 0) && (i < w - 1 && j < h - 1)) {
-                    for (m in i - 2..i + 2) {
-                        for (n in j - 2..j + 2) {
-                            val mnPixel = oldBitmap.getPixel(m, n)
-                            totalRed += Color.red(mnPixel)
-                            totalGreen += Color.green(mnPixel)
-                            totalBlue += Color.blue(mnPixel)
+                if(newRed == 255 && newGreen == 255 && newBlue == 255){
+                    if ((i > 0 && j > 0) && (i < w - 1 && j < h - 1)) {
+                        for (m in i - 1..i + 1) {
+                            for (n in j - 1..j + 1) {
+                                val mnPixel = oldBitmap.getPixel(m, n)
+                                totalRed += Color.red(mnPixel)
+                                totalGreen += Color.green(mnPixel)
+                                totalBlue += Color.blue(mnPixel)
+                            }
                         }
+                        newRed = totalRed / 9
+                        newGreen = totalGreen / 9
+                        newBlue = totalBlue / 9
                     }
-                    newRed = totalRed / 25
-                    newGreen = totalGreen / 25
-                    newBlue = totalBlue / 25
                 }
-
 
                 //ALGORITHM USING 5X5
                 /**

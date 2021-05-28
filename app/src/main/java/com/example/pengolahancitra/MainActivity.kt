@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
     PermissionListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var defaultBitmap: Bitmap
-    private var isPictureAdded: Boolean = true
+    private var isPictureAdded: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
