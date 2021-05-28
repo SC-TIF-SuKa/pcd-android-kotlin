@@ -40,7 +40,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-
     <ImageButton
         android:id="@+id/btn_take_picture"
         android:layout_width="70dp"
@@ -75,8 +74,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp">
 
             <ImageButton
                 android:id="@+id/btn_image_information"
@@ -93,7 +92,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/btn_image_information"
                 app:layout_constraintStart_toEndOf="@+id/btn_image_information"
                 app:layout_constraintTop_toTopOf="@+id/btn_image_information"
-                app:srcCompat="@drawable/ic_baseline_settings_brightness_24" />
+                app:srcCompat="@drawable/ic_greyscale_24" />
 
             <ImageButton
                 android:id="@+id/btn_flip_horizontal"
@@ -131,20 +130,33 @@
                 app:layout_constraintTop_toTopOf="@+id/btn_image_information"
                 app:srcCompat="@drawable/ic_baseline_rotate_right_24" />
 
-
             <ImageButton
-                android:id="@+id/btn_bw"
+                android:id="@+id/btn_monochrome"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_image_information"
                 app:layout_constraintStart_toEndOf="@+id/btn_rotate_right_90"
                 app:layout_constraintTop_toTopOf="@+id/btn_image_information"
-                app:srcCompat="@drawable/ic_baseline_rotate_right_24" />
+                app:srcCompat="@drawable/ic_monochrome_24" />
+
+            <ImageButton
+                android:id="@+id/btn_noise_salt"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_image_information"
+                app:layout_constraintStart_toEndOf="@+id/btn_monochrome"
+                app:layout_constraintTop_toTopOf="@+id/btn_image_information"
+                app:srcCompat="@drawable/ic_noise_24" />
+
+            <ImageButton
+                android:id="@+id/btn_avg_filter"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_image_information"
+                app:layout_constraintStart_toEndOf="@+id/btn_noise_salt"
+                app:layout_constraintTop_toTopOf="@+id/btn_image_information"
+                app:srcCompat="@drawable/ic_baseline_restoration_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </HorizontalScrollView>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
