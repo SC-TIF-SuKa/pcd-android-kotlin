@@ -4,11 +4,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import com.example.pengolahancitra.databinding.ActivityMainBinding
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.karumi.dexter.PermissionToken
@@ -18,7 +16,9 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.coroutines.runBlocking
 
-
+/**
+ * Created by Fakhry on 28/05/2021.
+ */
 class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener,
     PermissionListener {
     private lateinit var binding: ActivityMainBinding
@@ -39,7 +39,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
             btnFlipVertical.setOnClickListener(this@MainActivity)
             btnRotateLeft90.setOnClickListener(this@MainActivity)
             btnRotateRight90.setOnClickListener(this@MainActivity)
-            btnBw.setOnClickListener(this@MainActivity)
+            btnMonochrome.setOnClickListener(this@MainActivity)
+            btnNoiseSalt.setOnClickListener(this@MainActivity)
+            btnAvgFilter.setOnClickListener(this@MainActivity)
+
 
             btnTakePicture.setOnLongClickListener(this@MainActivity)
             btnSave.setOnLongClickListener(this@MainActivity)
@@ -49,23 +52,51 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
             btnFlipVertical.setOnLongClickListener(this@MainActivity)
             btnRotateLeft90.setOnLongClickListener(this@MainActivity)
             btnRotateRight90.setOnLongClickListener(this@MainActivity)
-            btnBw.setOnLongClickListener(this@MainActivity)
+            btnMonochrome.setOnLongClickListener(this@MainActivity)
+            btnNoiseSalt.setOnLongClickListener(this@MainActivity)
+            btnAvgFilter.setOnLongClickListener(this@MainActivity)
         }
 
-        //Set Bitmap
-        val fileUri =
-            "file:///storage/emulated/0/Android/data/com.example.pengolahancitra/files/DCIM/IMG_20210520_203823443.jpg".toUri()
-        defaultBitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(fileUri))
-        binding.ivImageTaken.setImageBitmap(defaultBitmap)
+        //Set Default Bitmap
+//        val fileUri = "content://com.android.providers.media.documents/document/image%3A220701".toUri()
+//        defaultBitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(fileUri))
+//        binding.ivImageTaken.setImageBitmap(defaultBitmap)
+
     }
+
+    /** Solution For Deprecated Activity For Result
+    var resultLauncher =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    when (result.resultCode) {
+    Activity.RESULT_OK -> {
+    //Image Uri will not be null for RESULT_OK
+    val fileUri = result.data?.data!!
+    //Set Bitmap
+    defaultBitmap =
+    BitmapFactory.decodeStream(contentResolver.openInputStream(fileUri))
+    // Use Uri object instead of File to avoid storage permissions
+
+    isPictureAdded = true
+    binding.ivImageTaken.setImageBitmap(defaultBitmap)
+    binding.ivImageTaken.elevation = 0F
+    }
+    ImagePicker.RESULT_ERROR -> {
+    showToast(ImagePicker.getError(result.data))
+    isPictureAdded = false
+    }
+    else -> {
+    showToast("Gagal mengupload foto")
+    isPictureAdded = false
+    }
+    }
+    }
+     */
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
             RESULT_OK -> {
-                //Image Uri will not be null for RESULT_OK
                 val fileUri = data?.data!!
-                Log.d("fileUri", fileUri.toString())
 
                 //Set Bitmap
                 defaultBitmap =
@@ -97,8 +128,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
             binding.btnFlipHorizontal -> showToast("Flip Horizontal")
             binding.btnRotateLeft90 -> showToast("Rotasi ke kiri")
             binding.btnRotateRight90 -> showToast("Rotasi ke kanan")
-            binding.btnBw -> showToast("Ubah Citra ke Black and White")
-
+            binding.btnMonochrome -> showToast("Ubah Citra ke Black and White")
+            binding.btnNoiseSalt -> showToast("Berikan noise salt and papper ke citra")
+            binding.btnAvgFilter -> showToast("Restorasi citra")
         }
         return true
     }
@@ -108,24 +140,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
             binding.btnTakePicture -> addBitmap()
 
             binding.btnSave -> {
-                Utils.saveImage(defaultBitmap, this, "PCDPengeloahan Citra")
+                if (isPictureAdded) {
+                    Utils.saveImage(defaultBitmap, this, "PCD")
+                } else showToast("Gambar belum ditambahkan.")
             }
 
             binding.btnImageInformation -> {
                 if (isPictureAdded) {
-                    val bitmapHeight = defaultBitmap.height
-                    val bitmapWidth = defaultBitmap.width
-                    val bitmapByteCount = defaultBitmap.byteCount
-                    val bitmapDensity = defaultBitmap.density
-                    val bitmapIsMutable = defaultBitmap.isMutable
-                    val bitmapRowBytes = defaultBitmap.rowBytes
-
-                    Log.d("bitmapInfo", "bitmap height\t: $bitmapHeight")
-                    Log.d("bitmapInfo", "bitmap width\t: $bitmapWidth")
-                    Log.d("bitmapInfo", "bitmap byte count\t: $bitmapByteCount")
-                    Log.d("bitmapInfo", "bitmap density\t: $bitmapDensity")
-                    Log.d("bitmapInfo", "bitmap is mutable\t: $bitmapIsMutable")
-                    Log.d("bitmapInfo", "bitmap row bytes\t: $bitmapRowBytes")
+//                    val bitmapHeight = defaultBitmap.height
+//                    val bitmapWidth = defaultBitmap.width
+//                    val bitmapByteCount = defaultBitmap.byteCount
+//                    val bitmapDensity = defaultBitmap.density
+//                    val bitmapIsMutable = defaultBitmap.isMutable
+//                    val bitmapRowBytes = defaultBitmap.rowBytes
                 } else showToast("Gambar belum ditambahkan.")
             }
 
@@ -142,7 +169,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                         defaultBitmap = ImageFlipping.verticalFlip(defaultBitmap)
                     }
                     binding.ivImageTaken.setImageBitmap(defaultBitmap)
-                    showLoading(false)
                 } else showToast("Gambar belum ditambahkan.")
             }
 
@@ -167,9 +193,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                 } else showToast("Gambar belum ditambahkan.")
             }
 
-            binding.btnBw -> {
+            binding.btnMonochrome -> {
                 if (isPictureAdded) {
                     defaultBitmap = ImageFilters.setBlackAndWhite(defaultBitmap)
+                    binding.ivImageTaken.setImageBitmap(defaultBitmap)
+                } else showToast("Gambar belum ditambahkan.")
+            }
+
+            binding.btnNoiseSalt -> {
+                if (isPictureAdded) {
+                    defaultBitmap = NoiseSetter.setNoiseSaltAndPepper(defaultBitmap)
+                    binding.ivImageTaken.setImageBitmap(defaultBitmap)
+                } else showToast("Gambar belum ditambahkan.")
+            }
+
+            binding.btnAvgFilter -> {
+                if (isPictureAdded) {
+                    defaultBitmap = NoiseRemover.averageFilter(defaultBitmap)
                     binding.ivImageTaken.setImageBitmap(defaultBitmap)
                 } else showToast("Gambar belum ditambahkan.")
             }
@@ -178,22 +218,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
 
     private fun addBitmap() {
         ImagePicker.with(this)
-            .cropSquare()
             .start()
-    }
-
-    private fun showLoading(state: Boolean) {
-        if (state) {
-            binding.run {
-                pbLoading.visibility = View.VISIBLE
-                ivLoadingBg.visibility = View.VISIBLE
-            }
-        } else {
-            binding.run {
-                pbLoading.visibility = View.INVISIBLE
-                ivLoadingBg.visibility = View.INVISIBLE
-            }
-        }
     }
 
     private fun showToast(message: String) {
