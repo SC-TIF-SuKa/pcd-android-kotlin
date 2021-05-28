@@ -2,8 +2,10 @@ package com.example.pengolahancitra
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 
+/**
+ * Created by Fakhry on 28/05/2021.
+ */
 object ImageFilters {
 
     private const val HIGHEST_COLOR_VALUE = 255
@@ -16,15 +18,12 @@ object ImageFilters {
      * @return newBitmap new image after filter
      */
     fun setGreyFilter(oldBitmap: Bitmap): Bitmap {
-
         // copying to newBitmap for manipulation
         val newBitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
         // height and width of Image
         val h = newBitmap.height
         val w = newBitmap.width
-        Log.e("Image Size", "Height=$h Width=$w")
-
 
         // traversing each pixel in Image as an 2D Array
         for (i in 0 until w) {
@@ -60,14 +59,12 @@ object ImageFilters {
      * @return newBitmap new image after filter
      */
     fun setNegativeFilter(oldBitmap: Bitmap): Bitmap {
-
         // copying to newBitmap for manipulation
         val newBitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
         // height and width of Image
         val h = newBitmap.height
         val w = newBitmap.width
-        Log.e("Image Size", "Height=$h Width=$w")
 
         // traversing each pixel in Image as an 2D Array
         for (i in 0 until w) {
@@ -97,7 +94,7 @@ object ImageFilters {
     }
 
     /**
-     * Apply Sketch Filter on image
+     * Apply Monochrome Filter on image
      *
      * @param oldBitmap image where filter to be applied
      * @return newBitmap new image after filter
@@ -106,7 +103,6 @@ object ImageFilters {
         val newBitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val h = newBitmap.height
         val w = newBitmap.width
-        Log.e("Image Size", "Height=$h Width=$w")
 
         // traversing each pixel in Image as an 2D Array
         for (i in 0 until w) {
@@ -118,31 +114,21 @@ object ImageFilters {
                 // each pixel is made from RED_BLUE_GREEN
                 // so, getting current values of pixel
                 val oldRed = Color.red(oldPixel)
-                val oldBlue = Color.blue(oldPixel)
                 val oldGreen = Color.green(oldPixel)
+                val oldBlue = Color.blue(oldPixel)
                 val oldAlpha = Color.alpha(oldPixel)
 
-
                 // Algorithm for getting new values after calculation of filter
-                // Algorithm for SKETCH FILTER
+                // Algorithm for MONOCHROME FILTER
                 val intensity = (oldRed + oldBlue + oldGreen) / 3
 
-                // applying new pixel value to newBitmap
-                // condition for Sketch
-                var newPixel = 0
+                // condition for monochrome
                 val intensityFactor = 128
-                newPixel = if (intensity > intensityFactor) {
-                    // apply white color
-                    Color.argb(
-                        oldAlpha,
-                        HIGHEST_COLOR_VALUE,
-                        HIGHEST_COLOR_VALUE,
-                        HIGHEST_COLOR_VALUE
-                    )
-                } else {
-                    // apply black color
-                    Color.argb(oldAlpha, LOWEST_COLOR_VALUE, LOWEST_COLOR_VALUE, LOWEST_COLOR_VALUE)
-                }
+                val binaryColor =
+                    if (intensity > intensityFactor) HIGHEST_COLOR_VALUE else LOWEST_COLOR_VALUE
+
+                // applying new pixel value to newBitmap
+                val newPixel = Color.argb(oldAlpha, binaryColor, binaryColor, binaryColor)
                 newBitmap.setPixel(i, j, newPixel)
             }
         }
