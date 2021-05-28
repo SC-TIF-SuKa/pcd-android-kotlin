@@ -2,6 +2,9 @@ package com.example.pengolahancitra
 
 import android.graphics.Bitmap
 
+/**
+ * Created by Fakhry on 28/05/2021.
+ */
 object ImageFlipping {
 
     fun verticalFlip(oldBitmap: Bitmap): Bitmap {
