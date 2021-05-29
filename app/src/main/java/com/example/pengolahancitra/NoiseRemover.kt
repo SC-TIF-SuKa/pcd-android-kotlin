@@ -24,51 +24,55 @@ object NoiseRemover {
                 val oldPixel = oldBitmap.getPixel(i, j)
                 val oldAlpha = Color.alpha(oldPixel)
 
-                var newRed = Color.red(oldPixel)
-                var newGreen = Color.green(oldPixel)
-                var newBlue = Color.blue(oldPixel)
+                var avgRed = 0
+                var avgGreen = 0
+                var avgBlue = 0
+                var totalIteration = 0
 
-                var totalRed = 0
-                var totalGreen = 0
-                var totalBlue = 0
+                //Optimized Algorithm
+                for (m in i - 1..i + 1) {
+                    for (n in j - 1..j + 1) {
 
-                //ALGORITHM USING 3X3
-                if(newRed == 255 && newGreen == 255 && newBlue == 255){
-                    if ((i > 0 && j > 0) && (i < w - 1 && j < h - 1)) {
-                        for (m in i - 1..i + 1) {
-                            for (n in j - 1..j + 1) {
-                                val mnPixel = oldBitmap.getPixel(m, n)
-                                totalRed += Color.red(mnPixel)
-                                totalGreen += Color.green(mnPixel)
-                                totalBlue += Color.blue(mnPixel)
-                            }
-                        }
-                        newRed = totalRed / 9
-                        newGreen = totalGreen / 9
-                        newBlue = totalBlue / 9
-                    }
-                }
-
-                //ALGORITHM USING 5X5
-                /**
-                if ((i > 1 && j > 1) && (i < w - 2 && j < h - 2)) {
-                    for (m in i - 2..i + 2) {
-                        for (n in j - 2..j + 2) {
+                        //Try and catch to avoid out of index iteration
+                        try {
                             val mnPixel = oldBitmap.getPixel(m, n)
-                            totalRed += Color.red(mnPixel)
-                            totalGreen += Color.green(mnPixel)
-                            totalBlue += Color.blue(mnPixel)
+                            avgRed += Color.red(mnPixel)
+                            avgGreen += Color.green(mnPixel)
+                            avgBlue += Color.blue(mnPixel)
+                            totalIteration++
+                        } catch (e: Exception) {
                         }
                     }
-                    newRed = totalRed / 25
-                    newGreen = totalGreen / 25
-                    newBlue = totalBlue / 25
                 }
+                avgRed /= totalIteration
+                avgGreen /= totalIteration
+                avgBlue /= totalIteration
 
-                */
+                // CONQUER THE RISE OF SALT(WHITE)
+                /**
+                if(newRed == 255 && newGreen == 255 && newBlue == 255){
+                for (m in i - 1..i + 1) {
+                for (n in j - 1..j + 1) {
+
+                //Try and catch to avoid out of index iteration
+                try {
+                val mnPixel = oldBitmap.getPixel(m, n)
+                avgRed += Color.red(mnPixel)
+                avgGreen += Color.green(mnPixel)
+                avgBlue += Color.blue(mnPixel)
+
+                totalIteration++
+                } catch (e: Exception) {}
+                }
+                }
+                avgRed /= totalIteration
+                avgGreen /= totalIteration
+                avgBlue /= totalIteration
+                }
+                 */
 
                 //use the avg filter
-                val newPixel = Color.argb(oldAlpha, newRed, newGreen, newBlue)
+                val newPixel = Color.argb(oldAlpha, avgRed, avgGreen, avgBlue)
                 newBitmap.setPixel(i, j, newPixel)
             }
         }
